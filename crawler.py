@@ -84,7 +84,6 @@ class ImageDownloader:
     def crawlerCallback(self, res):
         result = res.result()
         if result and result.status_code == 200:
-            #botei essa função aqui só porquê a função de finalização do processo pedia uma função como parâmetro
             print(result)
 
     def stillLoadingURLImages(self):
