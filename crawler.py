@@ -89,8 +89,8 @@ class ImageDownloader:
     def stillLoadingURLImages(self):
         if self.prepared != State.DONE:
             for job in self.startFutures:
-                '''Verifica se as threads iniciais (dos links das imagens) ainda está rodando!
-                Se ainda estiver rodando então o loop na função start() deve continuar iterando!'''
+                '''Verifica se as threads iniciais (dos links das imagens) ainda estão rodando!
+                Se ainda estiverem rodando então o loop na função start() deve continuar iterando!'''
                 if job.running():
                     return True
             self.prepared = State.DONE
