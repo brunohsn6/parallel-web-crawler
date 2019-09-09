@@ -27,7 +27,7 @@ class ImageDownloader:
                 with open (self.urls, 'r') as urls:
                     line = urls.readline()
                     while line:
-                        self.prepared = 1
+                        self.prepared = State.RUNNING
                         worker = self.threadPool.submit(self.getImageUrls, line)
                         print('******************')
                         self.startFutures.add(worker)
