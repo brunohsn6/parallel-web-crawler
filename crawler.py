@@ -1,4 +1,4 @@
- # -*- coding: ISO-8859-1 -*-
+# -*- coding: ISO-8859-1 -*-
 from threading import Thread
 import urllib.request
 import re
@@ -12,12 +12,13 @@ from myThreadPool import MyThreadPool
 from state import State
 import logging
 
+
 is_py2=sys.version[0] == '2'
+
 if is_py2:
     from Queue import Queue as Queue
 else:
     from queue import Queue as Queue
-
 
 class ImageDownloader:
     def prepareExecution(self):
@@ -79,11 +80,8 @@ class ImageDownloader:
                     self.threadPool.mutex.acquire()
                     self.to_crawl.put(srcImage)  
                     self.threadPool.mutex.release()
-                    
-                      
             except Exception as e:
                 print(e)
-
 
     def start(self):
         self.prepareExecution()
@@ -101,8 +99,7 @@ class ImageDownloader:
                     
             except Exception as e:
                 logging.warning(e)
-        
-        
+
 
 if __name__ == "__main__":
     #passa o nome do arquivo por parâmetro
@@ -116,3 +113,4 @@ if __name__ == "__main__":
         imgDownloader.start()
     else:
         logging.info("Por favor informe o nome do arquivo que possui os links!")
+
