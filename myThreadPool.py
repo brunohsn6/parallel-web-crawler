@@ -2,11 +2,10 @@ from threading import Thread, Lock
 from job import Job
 import time
 from enum import Enum
+from state import State
+import logging
 
-class State(Enum):
-    WAITING = 0
-    RUNNING = 1
-    DONE = 2
+
 
 class MyThreadPool:
     def __init__(self, maxWorkers):
@@ -33,7 +32,7 @@ class MyThreadPool:
                     job = self.pool.pop()
                 
                 try:
-                    print("starting thread")
+                    logging.info("starting thread")
                     th = Thread(target=job.function, args=(job.args,))
                     th.start()
                     
@@ -42,9 +41,9 @@ class MyThreadPool:
                         self.currentQtdWorkers+=1
                         
                 except Exception as e:
-                    print("a execução da thread falhou!")
-                    print(th)
-                    print(e)
+                    logging.warning("a execução da thread falhou!")
+                    logging.info(th)
+                    logging.info(e)
                 
                     
     
@@ -52,7 +51,7 @@ class MyThreadPool:
         newExec = Job(func, args)
         with self.mutex:
             self.pool.add(newExec)
-            print("submitted")
+            logging.info("submitted")
             self.counter +=1
         
         
@@ -67,7 +66,7 @@ class MyThreadPool:
                     self.counter -=1
                     self.currentWorkers.remove(td)
                     self.currentQtdWorkers-=1
-                    print("releasing thread")
+                    logging.info("releasing thread")
         if(self.counter == 0 and not self.pool and not self.currentWorkers):
             self.state = State.DONE
             

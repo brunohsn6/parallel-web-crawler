@@ -8,7 +8,10 @@ import os
 from concurrent.futures import ThreadPoolExecutor
 import sys
 import time
-from myThreadPool import MyThreadPool, State
+from myThreadPool import MyThreadPool
+from state import State
+import logging
+
 is_py2=sys.version[0] == '2'
 if is_py2:
     from Queue import Queue as Queue
@@ -55,7 +58,7 @@ class ImageDownloader:
             with open (namePath, 'wb') as f:
                 f.write(r.content)
         except:
-            print("nao foi possivel realizar o download da imagem " + str(url))
+            loggin.warning("nao foi possivel realizar o download da imagem " + str(url))
             
     def getImageUrls(self, urll):
         srcImage = ''
@@ -97,7 +100,7 @@ class ImageDownloader:
                     self.threadPool.submit(self.download, current_url)
                     
             except Exception as e:
-                print(e)
+                logging.warning(e)
         
         
 
@@ -108,4 +111,4 @@ if __name__ == "__main__":
         imgDownloader = ImageDownloader(archive[0])
         imgDownloader.start()
     else:
-        print("Por favor informe o nome do arquivo que possui os links!")
+        logging.info("Por favor informe o nome do arquivo que possui os links!")
