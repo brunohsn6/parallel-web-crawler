@@ -1,4 +1,4 @@
- # -*- coding: ISO-8859-1 -*-
+# -*- coding: ISO-8859-1 -*-
 from threading import Thread
 import urllib.request
 import re
@@ -9,12 +9,13 @@ from concurrent.futures import ThreadPoolExecutor
 import sys
 import time
 from myThreadPool import MyThreadPool, State
+
 is_py2=sys.version[0] == '2'
+
 if is_py2:
     from Queue import Queue as Queue
 else:
     from queue import Queue as Queue
-
 
 class ImageDownloader:
     def prepareExecution(self):
@@ -76,11 +77,8 @@ class ImageDownloader:
                     self.threadPool.mutex.acquire()
                     self.to_crawl.put(srcImage)  
                     self.threadPool.mutex.release()
-                    
-                      
             except Exception as e:
                 print(e)
-
 
     def start(self):
         self.prepareExecution()
@@ -98,8 +96,6 @@ class ImageDownloader:
                     
             except Exception as e:
                 print(e)
-        
-        
 
 if __name__ == "__main__":
     #passa o nome do arquivo por parâmetro
