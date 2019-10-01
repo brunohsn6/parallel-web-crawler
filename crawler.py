@@ -103,7 +103,11 @@ class ImageDownloader:
 
 if __name__ == "__main__":
     #passa o nome do arquivo por parâmetro
-    archive = sys.argv[1:]
+    if sys.argv[1:] != null:
+        archive = sys.argv[1:]
+    else:
+        archive = 'links.txt'
+
     if archive:
         imgDownloader = ImageDownloader(archive[0])
         imgDownloader.start()
