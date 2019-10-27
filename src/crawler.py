@@ -11,16 +11,25 @@ import time
 from myThreadPool import MyThreadPool
 from state import State
 import logging
-
-
-is_py2=sys.version[0] == '2'
-
+is_py2 = sys.version[0] == '2'
 if is_py2:
     from Queue import Queue as Queue
 else:
     from queue import Queue as Queue
 
 class ImageDownloader:
+    
+    def __init__(self, param1):
+        self.urls = param1
+        self.threadList=[]
+        self.threadPool = MyThreadPool(20)
+        self.readUrls = set([])
+        self.to_crawl = Queue()
+        self.prepared = State.WAITING
+        self.startFutures = set([])
+        if(not os.path.exists("downloaded photos")):
+            os.mkdir('./downloaded photos')
+            
     def prepareExecution(self):
         if self.prepared == State.WAITING:
             self.prepared = State.RUNNING
@@ -38,28 +47,19 @@ class ImageDownloader:
             finally:
                 urls.close()
 
-    def __init__(self, param1):
-        self.urls = param1
-        self.threadList=[]
-        self.threadPool = MyThreadPool(20)
-        self.readUrls = set([])
-        self.to_crawl = Queue()
-        self.prepared = State.WAITING
-        self.startFutures = set([])
-        if(not(os.path.exists("downloaded photos"))):
-            os.mkdir('./downloaded photos')
+    
     
     def download(self, url):
         try:
             if(not("http" in url)):
-                url="http:"+url
+                url = "http:" + url
             r = requests.get(url)
             
             namePath="./downloaded photos/"+str(url).split('/').pop()
             with open (namePath, 'wb') as f:
                 f.write(r.content)
         except:
-            loggin.warning("nao foi possivel realizar o download da imagem " + str(url))
+            logging.warning("nao foi possivel realizar o download da imagem " + str(url))
             
     def getImageUrls(self, urll):
         srcImage = ''
@@ -94,7 +94,6 @@ class ImageDownloader:
                 current_url=self.to_crawl.get(timeout=60)
                 if current_url and current_url not in self.readUrls:
                     self.readUrls.add(current_url)
-                    #vai para o pool de threads concorrer pelo bastão para a execução!
                     self.threadPool.submit(self.download, current_url)
                     
             except Exception as e:
@@ -102,13 +101,12 @@ class ImageDownloader:
 
 
 if __name__ == "__main__":
-    #passa o nome do arquivo por parâmetro
-    if sys.argv[1:] != null:
+    if (sys.argv[1:] != None):
         archive = sys.argv[1:]
     else:
         archive = 'links.txt'
 
-    if archive:
+    if (archive):
         imgDownloader = ImageDownloader(archive[0])
         imgDownloader.start()
     else:
